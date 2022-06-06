@@ -10,8 +10,8 @@ http://ceros-ski.herokuapp.com/
 Or deploy it locally by running:
 
 ```
-npm install
-npm run dev
+yarn
+yarn dev
 ```
 
 **How To Play**
@@ -99,20 +99,63 @@ We are looking forward to see what you come up with!!
 
 ## New features added
 
-- Skier can now jump by pressing `Space bar`.
+* Skier can now jump by pressing `Space bar`.
 
-- Skier can now jump over rocks.
+* Skier can now jump over rocks.
 
-- Skier jumps automatically when in collision with a jump ramp.
+* Skier jumps automatically when in collision with a jump ramp.
 
-- Added game score functionality.
+* Added game score functionality.
 
-- Added a game board to show the game's current state(paused, playing, game over), score and game controls
+* Added a game board to show the game's current state(paused, playing, game over), score and game controls
 
-- Added functionality to reset the game when it's over by pressing `R`.
+* Added functionality to reset the game when it's over by pressing `R`.
 
-- Added functionality to pause/resume by pressing `P`.
+* Added functionality to pause/resume by pressing `P`.
 
-- Difficulty increases as skier skis longer.
+* Difficulty increases as skier skis longer.
 
-- Deployment is handled with netlify at [Solution Demo Link](https://ben-ceros-ski.netlify.app/)
+* Deployment is handled with netlify at [Solution Demo Link](https://ben-ceros-ski.netlify.app/)
+
+## Explanation for jumping over rocks
+Rocks are also obstacles hence the simplest solution I could think of was to not recognize a collion with a rock whiles skier is already jumping.
+
+![image](https://user-images.githubusercontent.com/35709836/172260657-b02a1454-a2f7-4c88-bb28-dcfed00f9557.png)
+
+This is handled by the function `canJump` in `SkierJump.ts`.
+
+![image](https://user-images.githubusercontent.com/35709836/172260739-9dc2271b-a54c-46f6-aa09-dc115654843f.png)
+
+## Explanation for pressing space to jump.
+If the key pressed is the spacebar, we invoke a method to start the jumping sequence.
+
+![image](https://user-images.githubusercontent.com/35709836/172261210-5813474e-fbb3-442c-9aed-e848a26443a5.png)
+
+Seen in the image above as `this.jump.jumpStart()`.
+We keep track of wether the skier is currently jumping and the direction before the jump was initiated.
+
+I set the direction of `DIRECTION_JUMP` so we can handle the jump animation as the skier moves.
+
+![image](https://user-images.githubusercontent.com/35709836/172261483-9abbaa51-e600-4aa2-9610-77fc81a7c4ad.png)
+
+![image](https://user-images.githubusercontent.com/35709836/172261806-4981d91d-796d-430e-b15a-81667d3a1809.png)
+
+Each visible jumping sequence image can only be seen as the skier moves, hence we pick the next jump sequence image only after our asset animation timer catches up to the speed of the skier
+
+![image](https://user-images.githubusercontent.com/35709836/172263051-b9fc7d9c-77d1-4600-8051-3562a6b2af63.png)
+
+## Explanation for jumping on ramps automatically.
+When the skier collides with an obstacle, if said obstacle is a jump ramp, we call the method to start the jump sequence
+
+![image](https://user-images.githubusercontent.com/35709836/172263780-7099f7f4-1608-4dff-90fb-f311ecf1dc9d.png)
+
+
+## Explanation for scores
+We only increment the scores for movements. Direct Left and Right movements are not awarded any points.
+* Jump = 2 points
+* Left/Right Diagonal movement = 1 point
+* Down movement = 1 point
+* Top = 0 points
+* Direct Left/Right = 0 points
+
+
