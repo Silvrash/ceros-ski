@@ -150,7 +150,7 @@ export class Game {
         this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow);
 
         this.skier.update();
-        // this.rhino.update(this.gameTime, this.skier);
+        this.rhino.update(this.gameTime, this.skier);
 
         if (this.skier.state === SKIER_STATES.STATE_DEAD) this.gameState = GAME_STATES.GAME_OVER;
     }
