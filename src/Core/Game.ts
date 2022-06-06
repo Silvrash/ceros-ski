@@ -2,13 +2,21 @@
  * The main game class. This initializes the game as well as runs the game/render loop and initial handling of input.
  */
 
-import { GAME_CANVAS, GAME_WIDTH, GAME_HEIGHT, IMAGES } from "../Constants";
-import { Canvas } from './Canvas';
+import {
+    GAME_CANVAS,
+    GAME_WIDTH,
+    GAME_HEIGHT,
+    IMAGES,
+    KEYS,
+    GAME_STATES,
+    SKIER_STATES,
+} from "../Constants";
+import { Canvas } from "./Canvas";
 import { ImageManager } from "./ImageManager";
-import { Position, Rect } from './Utils';
+import { Position, Rect } from "./Utils";
 import { ObstacleManager } from "../Entities/Obstacles/ObstacleManager";
 import { Rhino } from "../Entities/Rhino";
-import { Skier} from "../Entities/Skier";
+import { Skier } from "../Entities/Skier";
 
 export class Game {
     /**
@@ -41,6 +49,16 @@ export class Game {
     private rhino!: Rhino;
 
     /**
+     * animation frame
+     */
+    private animationFrame!: number;
+
+    /**
+     * The current game state.
+     */
+    private gameState: GAME_STATES = GAME_STATES.PLAYING;
+
+    /**
      * Initialize the game and setup any input handling needed.
      */
     constructor() {
@@ -67,7 +85,7 @@ export class Game {
      * Setup listeners for any input events we might need.
      */
     setupInputHandling() {
-        document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        document.addEventListener("keydown", this.handleKeyDown.bind(this));
     }
 
     /**
@@ -82,12 +100,45 @@ export class Game {
      * The main game loop. Clear the screen, update the game objects and then draw them.
      */
     run() {
-        this.canvas.clearCanvas();
+        if (this.gameState === GAME_STATES.PLAYING) {
+            this.canvas.clearCanvas();
 
-        this.updateGameWindow();
-        this.drawGameWindow();
+            this.updateGameWindow();
+            this.drawGameWindow();
+        }
+console.log(this.gameState, this.skier.state);
+        this.updateGameBoard();
 
-        requestAnimationFrame(this.run.bind(this));
+        this.animationFrame = requestAnimationFrame(this.run.bind(this));
+    }
+
+    restart() {
+        cancelAnimationFrame(this.animationFrame);
+
+        this.gameState = GAME_STATES.PLAYING;
+        this.obstacleManager = new ObstacleManager(this.imageManager, this.canvas);
+
+        this.skier = new Skier(0, 0, this.imageManager, this.obstacleManager, this.canvas);
+        this.rhino = new Rhino(-500, -2000, this.imageManager, this.canvas);
+
+        this.calculateGameWindow();
+        this.run();
+    }
+
+    pauseResume() {
+        if (this.gameState === GAME_STATES.GAME_OVER) return;
+        if (this.gameState === GAME_STATES.PLAYING) this.gameState = GAME_STATES.PAUSED;
+        else if (this.gameState === GAME_STATES.PAUSED) this.gameState = GAME_STATES.PLAYING;
+    }
+
+    updateGameBoard() {
+        const gameState = document.getElementById("game_state")!;
+        const gameScore = document.getElementById("game_score")!;
+        const gameLives = document.getElementById("game_lives")!;
+
+        gameState.innerText = this.gameState.toString();
+        gameScore.innerText = this.skier.score.toString();
+        gameLives.innerText = this.skier.lives.toString();
     }
 
     /**
@@ -103,6 +154,8 @@ export class Game {
 
         this.skier.update();
         // this.rhino.update(this.gameTime, this.skier);
+
+        if (this.skier.state === SKIER_STATES.STATE_DEAD) this.gameState = GAME_STATES.GAME_OVER;
     }
 
     /**
@@ -123,8 +176,8 @@ export class Game {
      */
     calculateGameWindow() {
         const skierPosition: Position = this.skier.getPosition();
-        const left: number = skierPosition.x - (GAME_WIDTH / 2);
-        const top: number = skierPosition.y - (GAME_HEIGHT / 2);
+        const left: number = skierPosition.x - GAME_WIDTH / 2;
+        const top: number = skierPosition.y - GAME_HEIGHT / 2;
 
         this.gameWindow = new Rect(left, top, left + GAME_WIDTH, top + GAME_HEIGHT);
     }
@@ -133,9 +186,21 @@ export class Game {
      * Handle keypresses and delegate to any game objects that might have key handling of their own.
      */
     handleKeyDown(event: KeyboardEvent) {
-        let handled: boolean = this.skier.handleInput(event.key);
+        let handled: boolean = true;
+        console.log(event.key);
+        switch (event.key) {
+            case KEYS.RESTART:
+                this.restart();
+                break;
+            case KEYS.PAUSE:
+                this.pauseResume();
+                break;
 
-        if(handled) {
+            default: // skier's controls
+                handled = this.skier.handleInput(event.key);
+        }
+
+        if (handled) {
             event.preventDefault();
         }
     }

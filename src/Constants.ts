@@ -1,7 +1,7 @@
 import { iImage } from "./Interfaces/iImage";
 
 export const GAME_CANVAS = "skiCanvas";
-export const GAME_WIDTH = window.innerWidth;
+export const GAME_WIDTH = window.innerWidth*0.8;
 export const GAME_HEIGHT = window.innerHeight;
 
 export enum KEYS {
@@ -10,6 +10,8 @@ export enum KEYS {
     UP = "ArrowUp",
     DOWN = "ArrowDown",
     SPACE = " ",
+    RESTART = 'r',
+    PAUSE = 'p',
 }
 
 export enum IMAGE_NAMES {
@@ -116,3 +118,13 @@ export const JUMP_ASSETS = [
     IMAGE_NAMES.SKIER_JUMP4,
     IMAGE_NAMES.SKIER_JUMP5,
 ];
+
+
+/**
+ * Game states
+ */
+export enum GAME_STATES {
+    PLAYING = "Playing",
+    PAUSED  = "Paused",
+    GAME_OVER = "Game Over",
+}

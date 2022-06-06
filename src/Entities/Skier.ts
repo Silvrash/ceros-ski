@@ -57,6 +57,21 @@ export class Skier extends Entity {
     jump: SkierJump;
 
     /**
+     * Skier's game score
+     */
+    score: number = 0;
+
+    /**
+     * Skier's lives score
+     */
+    lives: number = 4;
+
+    /**
+     * Current obstacle the skier has collided with.
+     */
+    currentCollidedObstacleId: number | null = null;
+
+    /**
      * Init the skier.
      */
     constructor(
@@ -348,7 +363,8 @@ export class Skier extends Entity {
                 return intersectTwoRects(skierBounds, obstacleBounds);
             });
 
-        if (collision) {
+        if (collision && this.currentCollidedObstacleId !== collision.id) {
+            this.currentCollidedObstacleId = collision.id;
             this.crash();
         }
     }
@@ -358,6 +374,13 @@ export class Skier extends Entity {
      * image.
      */
     crash() {
+        // decrease life if not already dead
+        if (this.state !== SKIER_STATES.STATE_CRASHED && this.lives > 0) {
+            this.lives -= 1;
+        }
+
+        if (this.lives === 0) return this.die();
+
         this.state = SKIER_STATES.STATE_CRASHED;
         this.speed = 0;
         this.imageName = IMAGE_NAMES.SKIER_CRASH;
@@ -371,6 +394,7 @@ export class Skier extends Entity {
         this.state = SKIER_STATES.STATE_SKIING;
         this.speed = STARTING_SPEED;
         this.setDirection(newDirection);
+        this.currentCollidedObstacleId = null;
     }
 
     /**

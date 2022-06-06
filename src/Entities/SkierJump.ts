@@ -20,9 +20,9 @@ export class SkierJump {
     initialDirection?: number;
 
     /**
-     * The timer to track and change jump image
+     * The asset animation frame for the jump animation.
      */
-    assetTimer: number = 0;
+    assetAnimationFrame: number = 0;
 
     /**
      * The asset to be used for the jump
@@ -58,7 +58,7 @@ export class SkierJump {
 
         this.isJumping = true;
         this.initialDirection = this.skier.direction; // save the direction we're jumping in so we continue after jumping
-        this.assetTimer = 0;
+        this.assetAnimationFrame = 0;
         this.jumpImage = 0;
         this.skier.setDirection(DIRECTION_JUMP);
     }
@@ -72,7 +72,7 @@ export class SkierJump {
         }
 
         this.isJumping = false;
-        this.assetTimer = 0;
+        this.assetAnimationFrame = 0;
         this.jumpImage = 0;
         this.skier.setDirection(this.initialDirection ?? this.skier.direction);
     }
@@ -103,12 +103,12 @@ export class SkierJump {
             this.skier.position.x += this.skier.speed;
 
         // animation timer
-        this.skier.jump.assetTimer++;
+        this.skier.jump.assetAnimationFrame++;
 
         // only reset asset and timer when we've reached the end of the jump animation
-        if (this.skier.jump.assetTimer <= this.skier.speed) return;
+        if (this.skier.jump.assetAnimationFrame <= this.skier.speed) return;
 
         this.jumpImage++;
-        this.assetTimer = 0;
+        this.assetAnimationFrame = 0;
     }
 }

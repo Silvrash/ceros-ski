@@ -25,13 +25,19 @@ export class Obstacle extends Entity {
     imageName: IMAGE_NAMES;
 
     /**
+     * obstacle id
+     */
+    id: number;
+
+    /**
      * Initialize an obstacle and make it a random type.
      */
-    constructor(x: number, y: number, imageManager: ImageManager, canvas: Canvas) {
+    constructor(id: number, x: number, y: number, imageManager: ImageManager, canvas: Canvas) {
         super(x, y, imageManager, canvas);
 
         const typeIdx = randomInt(0, OBSTACLE_TYPES.length - 1);
-        this.imageName = OBSTACLE_TYPES[3];
+        this.imageName = OBSTACLE_TYPES[typeIdx];
+        this.id = id;
     }
 
     /**
