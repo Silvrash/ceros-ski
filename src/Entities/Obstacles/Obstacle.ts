@@ -5,7 +5,7 @@
 import { IMAGE_NAMES } from "../../Constants";
 import { Canvas } from "../../Core/Canvas";
 import { ImageManager } from "../../Core/ImageManager";
-import { randomInt } from '../../Core/Utils';
+import { randomInt } from "../../Core/Utils";
 import { Entity } from "../Entity";
 
 /**
@@ -15,7 +15,7 @@ const OBSTACLE_TYPES: IMAGE_NAMES[] = [
     IMAGE_NAMES.TREE,
     IMAGE_NAMES.TREE_CLUSTER,
     IMAGE_NAMES.ROCK1,
-    IMAGE_NAMES.ROCK2
+    IMAGE_NAMES.ROCK2,
 ];
 
 export class Obstacle extends Entity {
@@ -31,13 +31,11 @@ export class Obstacle extends Entity {
         super(x, y, imageManager, canvas);
 
         const typeIdx = randomInt(0, OBSTACLE_TYPES.length - 1);
-        this.imageName = OBSTACLE_TYPES[typeIdx];
+        this.imageName = OBSTACLE_TYPES[3];
     }
 
     /**
      * Obstacles can't be destroyed
      */
-    die() {
-
-    }
+    die() {}
 }
