@@ -5,6 +5,7 @@ Welcome to the Ceros Ski Code Challenge!
 For this challenge, we have included some base code for Ceros Ski, our version of the classic Windows game SkiFree. If
 you've never heard of SkiFree, Google has plenty of examples. Better yet, you can play our version here: 
 http://ceros-ski.herokuapp.com/  
+[Solution Demo Link](https://ben-ceros-ski.netlify.app/)
 
 Or deploy it locally by running:
 ```
@@ -90,3 +91,25 @@ how creative candidates get with this.
 * Write unit tests for your code
 
 We are looking forward to see what you come up with!!
+
+
+# Solution
+## New features added
+
+* Skier can now jump by pressing `Space bar`.
+
+* Skier can now jump over rocks.
+
+* Skier jumps automatically when in collision with a jump ramp.
+
+* Added game score functionality.
+
+* Added a game board to show the game's current state(paused, playing, game over), score and game controls
+
+* Added functionality to reset the game when it's over by pressing `R`.
+
+* Added functionality to pause/resume by pressing `P`.
+
+* Difficulty increases as skier skis longer.
+
+* Deployment is handled with netlify at [Solution Demo Link](https://ben-ceros-ski.netlify.app/)

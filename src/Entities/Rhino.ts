@@ -19,27 +19,24 @@ const STARTING_SPEED: number = 10.5;
  * The different states the rhino can be in.
  */
 enum STATES {
-    STATE_RUNNING = 'running',
-    STATE_EATING = 'eating',
-    STATE_CELEBRATING = 'celebrating'
-};
+    STATE_RUNNING = "running",
+    STATE_EATING = "eating",
+    STATE_CELEBRATING = "celebrating",
+}
 
 /**
  * Sequences of images that comprise the animations for the different states of the rhino.
  */
-const IMAGES_RUNNING: IMAGE_NAMES[] = [
-    IMAGE_NAMES.RHINO_RUN1,
-    IMAGE_NAMES.RHINO_RUN2
-];
+const IMAGES_RUNNING: IMAGE_NAMES[] = [IMAGE_NAMES.RHINO_RUN1, IMAGE_NAMES.RHINO_RUN2];
 const IMAGES_EATING: IMAGE_NAMES[] = [
     IMAGE_NAMES.RHINO_EAT1,
     IMAGE_NAMES.RHINO_EAT2,
     IMAGE_NAMES.RHINO_EAT3,
-    IMAGE_NAMES.RHINO_EAT4
+    IMAGE_NAMES.RHINO_EAT4,
 ];
 const IMAGES_CELEBRATING: IMAGE_NAMES[] = [
     IMAGE_NAMES.RHINO_CELEBRATE1,
-    IMAGE_NAMES.RHINO_CELEBRATE2
+    IMAGE_NAMES.RHINO_CELEBRATE2,
 ];
 
 export class Rhino extends Entity {
@@ -61,7 +58,7 @@ export class Rhino extends Entity {
     /**
      * Stores all of the animations available for the different states of the rhino.
      */
-    animations: {[key: string]: Animation} = {};
+    animations: { [key: string]: Animation } = {};
 
     /**
      * The animation that the rhino is currently using. Typically matches the state the rhino is in.
@@ -92,10 +89,7 @@ export class Rhino extends Entity {
      * Create and store the animations.
      */
     setupAnimations() {
-        this.animations[STATES.STATE_RUNNING] = new Animation(
-            IMAGES_RUNNING,
-            true
-        );
+        this.animations[STATES.STATE_RUNNING] = new Animation(IMAGES_RUNNING, true);
 
         this.animations[STATES.STATE_EATING] = new Animation(
             IMAGES_EATING,
@@ -103,10 +97,7 @@ export class Rhino extends Entity {
             this.celebrate.bind(this)
         );
 
-        this.animations[STATES.STATE_CELEBRATING] = new Animation(
-            IMAGES_CELEBRATING,
-            true
-        );
+        this.animations[STATES.STATE_CELEBRATING] = new Animation(IMAGES_CELEBRATING, true);
     }
 
     /**
@@ -129,7 +120,7 @@ export class Rhino extends Entity {
      * it only moves if it's running.
      */
     update(gameTime: number, target: Entity) {
-        if(this.isRunning()) {
+        if (this.isRunning()) {
             this.move(target);
             this.checkIfCaughtTarget(target);
         }
@@ -142,12 +133,17 @@ export class Rhino extends Entity {
      * any obstacles.
      */
     move(target: Entity) {
-        if(!this.isRunning()) {
+        if (!this.isRunning()) {
             return;
         }
 
         const targetPosition = target.getPosition();
-        const moveDirection = getDirectionVector(this.position.x, this.position.y, targetPosition.x, targetPosition.y);
+        const moveDirection = getDirectionVector(
+            this.position.x,
+            this.position.y,
+            targetPosition.x,
+            targetPosition.y
+        );
 
         this.position.x += moveDirection.x * this.speed;
         this.position.y += moveDirection.y * this.speed;
@@ -157,11 +153,11 @@ export class Rhino extends Entity {
      * Advance to the next frame in the current animation if enough time has elapsed since the previous frame.
      */
     animate(gameTime: number) {
-        if(!this.curAnimation) {
+        if (!this.curAnimation) {
             return;
         }
 
-        if(gameTime - this.curAnimationFrameTime > ANIMATION_FRAME_SPEED_MS) {
+        if (gameTime - this.curAnimationFrameTime > ANIMATION_FRAME_SPEED_MS) {
             this.nextAnimationFrame(gameTime);
         }
     }
@@ -171,7 +167,7 @@ export class Rhino extends Entity {
      * If the animation isn't looping, then finish the animation instead.
      */
     nextAnimationFrame(gameTime: number) {
-        if(!this.curAnimation) {
+        if (!this.curAnimation) {
             return;
         }
 
@@ -180,7 +176,7 @@ export class Rhino extends Entity {
         this.curAnimationFrameTime = gameTime;
         this.curAnimationFrame++;
         if (this.curAnimationFrame >= animationImages.length) {
-            if(!this.curAnimation.getLooping()) {
+            if (!this.curAnimation.getLooping()) {
                 this.finishAnimation();
                 return;
             }
@@ -195,14 +191,14 @@ export class Rhino extends Entity {
      * The current animation wasn't looping, so finish it by clearing out the current animation and firing the callback.
      */
     finishAnimation() {
-        if(!this.curAnimation) {
+        if (!this.curAnimation) {
             return;
         }
 
         const animationCallback = this.curAnimation.getCallback();
         this.curAnimation = null;
 
-        if(animationCallback) {
+        if (animationCallback) {
             animationCallback.apply(null);
         }
     }
@@ -213,7 +209,7 @@ export class Rhino extends Entity {
     checkIfCaughtTarget(target: Entity) {
         const rhinoBounds = this.getBounds();
         const targetBounds = target.getBounds();
-        if(!rhinoBounds || !targetBounds) {
+        if (!rhinoBounds || !targetBounds) {
             return;
         }
 
@@ -243,7 +239,7 @@ export class Rhino extends Entity {
      */
     setAnimation() {
         this.curAnimation = this.animations[this.state];
-        if(!this.curAnimation) {
+        if (!this.curAnimation) {
             return;
         }
 
@@ -256,7 +252,5 @@ export class Rhino extends Entity {
     /**
      * Nothing can kill the rhino...yet!
      */
-    die() {
-
-    }
+    die() {}
 }

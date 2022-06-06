@@ -4,19 +4,21 @@
 
 import {
     GAME_CANVAS,
-    GAME_WIDTH,
     GAME_HEIGHT,
+    GAME_STATES,
+    GAME_WIDTH,
     IMAGES,
     KEYS,
-    GAME_STATES,
+    LEVEL_INCREASE_STEP,
     SKIER_STATES,
+    STARTING_SPEED,
 } from "../Constants";
-import { Canvas } from "./Canvas";
-import { ImageManager } from "./ImageManager";
-import { Position, Rect } from "./Utils";
 import { ObstacleManager } from "../Entities/Obstacles/ObstacleManager";
 import { Rhino } from "../Entities/Rhino";
 import { Skier } from "../Entities/Skier";
+import { Canvas } from "./Canvas";
+import { ImageManager } from "./ImageManager";
+import { Position, Rect } from "./Utils";
 
 export class Game {
     /**
@@ -57,6 +59,11 @@ export class Game {
      * The current game state.
      */
     private gameState: GAME_STATES = GAME_STATES.PLAYING;
+
+    /**
+     * The current game's difficulty level
+     */
+    private level = 1;
 
     /**
      * Initialize the game and setup any input handling needed.
@@ -100,7 +107,7 @@ export class Game {
      * The main game loop. Clear the screen, update the game objects and then draw them.
      */
     run() {
-        if (this.gameState === GAME_STATES.PLAYING) {
+        if (this.gameState !== GAME_STATES.PAUSED) {
             this.canvas.clearCanvas();
 
             this.updateGameWindow();
@@ -112,6 +119,7 @@ export class Game {
     }
 
     restart() {
+        if (this.gameState !== GAME_STATES.GAME_OVER) return;
         cancelAnimationFrame(this.animationFrame);
 
         this.gameState = GAME_STATES.PLAYING;
@@ -133,9 +141,11 @@ export class Game {
     updateGameBoard() {
         const gameState = document.getElementById("game_state")!;
         const gameScore = document.getElementById("game_score")!;
+        const gameLevel = document.getElementById("game_level")!;
 
         gameState.innerText = this.gameState.toString();
         gameScore.innerText = this.skier.score.toLocaleString();
+        gameLevel.innerText = this.level.toString();
     }
 
     /**
@@ -147,10 +157,14 @@ export class Game {
         const previousGameWindow: Rect = this.gameWindow;
         this.calculateGameWindow();
 
-        this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow);
+        this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow, this.level);
 
         this.skier.update();
         this.rhino.update(this.gameTime, this.skier);
+
+        this.level = this.skier.score % LEVEL_INCREASE_STEP === 0 ? this.level + 1 : this.level;
+        this.skier.speed = STARTING_SPEED + (this.level - 1) * 5;
+        this.rhino.speed = STARTING_SPEED + (this.level - 1) * 5;
 
         if (this.skier.state === SKIER_STATES.STATE_DEAD) this.gameState = GAME_STATES.GAME_OVER;
     }

@@ -96,9 +96,11 @@ export class ObstacleManager {
      * Place a new obstacle while the game is running. If the game window has moved, we want to figure out which direction(s)
      * it has moved in and try to place a new obstacle offscreen (so player doesn't see it pop in) in that direction(s).
      */
-    placeNewObstacle(gameWindow: Rect, previousGameWindow: Rect) {
-        const shouldPlaceObstacle = randomInt(1, NEW_OBSTACLE_CHANCE);
-        if (shouldPlaceObstacle !== NEW_OBSTACLE_CHANCE) {
+    placeNewObstacle(gameWindow: Rect, previousGameWindow: Rect, gameLevel: number) {
+        const newObstacleChance = Math.ceil(NEW_OBSTACLE_CHANCE/gameLevel)
+        const shouldPlaceObstacle = randomInt(1, newObstacleChance);
+        console.log(newObstacleChance,shouldPlaceObstacle )
+        if (shouldPlaceObstacle !== newObstacleChance) {
             return;
         }
 
