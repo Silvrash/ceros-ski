@@ -83,9 +83,17 @@ export class SkierJump {
     canJump(obstacle: Obstacle) {
         return (
             (obstacle.imageName === IMAGE_NAMES.ROCK1 ||
-                obstacle.imageName === IMAGE_NAMES.ROCK2) &&
+                obstacle.imageName === IMAGE_NAMES.ROCK2 ||
+                obstacle.imageName === IMAGE_NAMES.JUMP_RAMP) &&
             this.isJumping
         );
+    }
+
+    /**
+     * Check's if obstacle is a jump ramp
+     */
+    isJumpRamp(obstacle: Obstacle) {
+        return obstacle.imageName === IMAGE_NAMES.JUMP_RAMP;
     }
 
     /**
@@ -93,6 +101,7 @@ export class SkierJump {
      */
     jumpSkier() {
         this.skier.position.y += this.skier.speed;
+        this.skier.score += 2;
 
         // continue jumping left down, if we were moving left down before jumping
         if (this.initialDirection === DIRECTION_LEFT_DOWN)

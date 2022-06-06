@@ -62,11 +62,6 @@ export class Skier extends Entity {
     score: number = 0;
 
     /**
-     * Skier's lives score
-     */
-    lives: number = 4;
-
-    /**
      * Current obstacle the skier has collided with.
      */
     currentCollidedObstacleId: number | null = null;
@@ -179,6 +174,7 @@ export class Skier extends Entity {
      */
     moveSkierLeft() {
         this.position.x -= STARTING_SPEED;
+        this.score += 0
     }
 
     /**
@@ -188,6 +184,7 @@ export class Skier extends Entity {
     moveSkierLeftDown() {
         this.position.x -= this.speed / DIAGONAL_SPEED_REDUCER;
         this.position.y += this.speed / DIAGONAL_SPEED_REDUCER;
+        this.score += 1
     }
 
     /**
@@ -195,6 +192,7 @@ export class Skier extends Entity {
      */
     moveSkierDown() {
         this.position.y += this.speed;
+        this.score += 1
     }
 
     /**
@@ -204,6 +202,7 @@ export class Skier extends Entity {
     moveSkierRightDown() {
         this.position.x += this.speed / DIAGONAL_SPEED_REDUCER;
         this.position.y += this.speed / DIAGONAL_SPEED_REDUCER;
+        this.score += 1
     }
 
     /**
@@ -212,6 +211,7 @@ export class Skier extends Entity {
      */
     moveSkierRight() {
         this.position.x += STARTING_SPEED;
+        this.score += 0
     }
 
     /**
@@ -363,7 +363,10 @@ export class Skier extends Entity {
                 return intersectTwoRects(skierBounds, obstacleBounds);
             });
 
-        if (collision && this.currentCollidedObstacleId !== collision.id) {
+        // if collision is found with a jump ramp, skier should jump
+        if (collision && this.jump.isJumpRamp(collision)) {
+            this.jump.jumpStart();
+        } else if (collision && this.currentCollidedObstacleId !== collision.id) {
             this.currentCollidedObstacleId = collision.id;
             this.crash();
         }
@@ -374,13 +377,6 @@ export class Skier extends Entity {
      * image.
      */
     crash() {
-        // decrease life if not already dead
-        if (this.state !== SKIER_STATES.STATE_CRASHED && this.lives > 0) {
-            this.lives -= 1;
-        }
-
-        if (this.lives === 0) return this.die();
-
         this.state = SKIER_STATES.STATE_CRASHED;
         this.speed = 0;
         this.imageName = IMAGE_NAMES.SKIER_CRASH;

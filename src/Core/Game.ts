@@ -106,7 +106,6 @@ export class Game {
             this.updateGameWindow();
             this.drawGameWindow();
         }
-console.log(this.gameState, this.skier.state);
         this.updateGameBoard();
 
         this.animationFrame = requestAnimationFrame(this.run.bind(this));
@@ -134,11 +133,9 @@ console.log(this.gameState, this.skier.state);
     updateGameBoard() {
         const gameState = document.getElementById("game_state")!;
         const gameScore = document.getElementById("game_score")!;
-        const gameLives = document.getElementById("game_lives")!;
 
         gameState.innerText = this.gameState.toString();
-        gameScore.innerText = this.skier.score.toString();
-        gameLives.innerText = this.skier.lives.toString();
+        gameScore.innerText = this.skier.score.toLocaleString();
     }
 
     /**
@@ -187,7 +184,6 @@ console.log(this.gameState, this.skier.state);
      */
     handleKeyDown(event: KeyboardEvent) {
         let handled: boolean = true;
-        console.log(event.key);
         switch (event.key) {
             case KEYS.RESTART:
                 this.restart();

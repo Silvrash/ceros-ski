@@ -39,6 +39,7 @@ export enum IMAGE_NAMES {
     SKIER_JUMP3 = "skierJump3",
     SKIER_JUMP4 = "skierJump4",
     SKIER_JUMP5 = "skierJump5",
+    JUMP_RAMP = "jumpRamp",
 }
 
 export const IMAGES: iImage[] = [
@@ -66,6 +67,7 @@ export const IMAGES: iImage[] = [
     { name: IMAGE_NAMES.SKIER_JUMP3, url: "img/skier_jump_3.png" },
     { name: IMAGE_NAMES.SKIER_JUMP4, url: "img/skier_jump_4.png" },
     { name: IMAGE_NAMES.SKIER_JUMP5, url: "img/skier_jump_5.png" },
+    { name: IMAGE_NAMES.JUMP_RAMP, url: "img/jump_ramp.png" },
 ];
 
 export const ANIMATION_FRAME_SPEED_MS: number = 250;
