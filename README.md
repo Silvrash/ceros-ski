@@ -9,8 +9,8 @@ http://ceros-ski.herokuapp.com/
 
 Or deploy it locally by running:
 ```
-npm install
-npm run dev
+yarn
+yarn dev
 ```
 
 **How To Play**
