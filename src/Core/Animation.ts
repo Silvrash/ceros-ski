@@ -6,37 +6,36 @@
 import { IMAGE_NAMES } from "../Constants";
 
 export class Animation {
+  /**
+   * The sequence of images the animation cycles through
+   */
+  private readonly images: IMAGE_NAMES[];
 
-    /**
-     * The sequence of images the animation cycles through
-     */
-    private readonly images: IMAGE_NAMES[];
+  /**
+   * Does the animation loop back to the beginning when complete?
+   */
+  private readonly looping: boolean;
 
-    /**
-     * Does the animation loop back to the beginning when complete?
-     */
-    private readonly looping: boolean;
+  /**
+   * Function to call when the animation is complete
+   */
+  private readonly callback?: Function;
 
-    /**
-     * Function to call when the animation is complete
-     */
-    private readonly callback?: Function;
+  constructor(images: IMAGE_NAMES[], looping: boolean, callback?: Function) {
+    this.images = images;
+    this.looping = looping;
+    this.callback = callback;
+  }
 
-    constructor(images: IMAGE_NAMES[], looping: boolean, callback?: Function) {
-        this.images = images;
-        this.looping = looping;
-        this.callback = callback;
-    }
+  getImages(): IMAGE_NAMES[] {
+    return this.images;
+  }
 
-    getImages(): IMAGE_NAMES[] {
-        return this.images;
-    }
+  getLooping(): boolean {
+    return this.looping;
+  }
 
-    getLooping(): boolean {
-        return this.looping;
-    }
-
-    getCallback(): Function | undefined {
-        return this.callback;
-    }
+  getCallback(): Function | undefined {
+    return this.callback;
+  }
 }

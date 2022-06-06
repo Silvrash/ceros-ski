@@ -31,190 +31,194 @@ const STARTING_OBSTACLE_REDUCER: number = 300;
 const NEW_OBSTACLE_CHANCE: number = 8;
 
 export class ObstacleManager {
-    /**
-     * All obstacles that exist in the game
-     */
-    obstacles: Obstacle[] = [];
+  /**
+   * All obstacles that exist in the game
+   */
+  obstacles: Obstacle[] = [];
 
-    /**
-     * Stored reference to the ImageManager
-     */
-    imageManager: ImageManager;
+  /**
+   * Stored reference to the ImageManager
+   */
+  imageManager: ImageManager;
 
-    /**
-     * Stored reference to the Canvas obstacles are drawn to
-     */
-    canvas: Canvas;
+  /**
+   * Stored reference to the Canvas obstacles are drawn to
+   */
+  canvas: Canvas;
 
-    /**
-     * Init the Obstacle Manager.
-     */
-    constructor(imageManager: ImageManager, canvas: Canvas) {
-        this.imageManager = imageManager;
-        this.canvas = canvas;
+  /**
+   * Init the Obstacle Manager.
+   */
+  constructor(imageManager: ImageManager, canvas: Canvas) {
+    this.imageManager = imageManager;
+    this.canvas = canvas;
+  }
+
+  getObstacles(): Obstacle[] {
+    return this.obstacles;
+  }
+
+  /**
+   * Loop through and draw all obstacles
+   */
+  drawObstacles() {
+    this.obstacles.forEach((obstacle: Obstacle) => {
+      obstacle.draw();
+    });
+  }
+
+  /**
+   * Place initial obstacles. Mimics the original SkiFree game in that obstacles are only initially placed below the
+   * skier.
+   */
+  placeInitialObstacles() {
+    const numberObstacles = Math.ceil(
+      (GAME_WIDTH / STARTING_OBSTACLE_REDUCER) *
+        (GAME_HEIGHT / STARTING_OBSTACLE_REDUCER)
+    );
+
+    const placementArea = new Rect(
+      -GAME_WIDTH / 2,
+      STARTING_OBSTACLE_GAP,
+      GAME_WIDTH / 2,
+      GAME_HEIGHT / 2
+    );
+
+    for (let i = 0; i < numberObstacles; i++) {
+      this.placeRandomObstacle(placementArea);
     }
 
-    getObstacles(): Obstacle[] {
-        return this.obstacles;
+    this.obstacles.sort((obstacle1: Obstacle, obstacle2: Obstacle) => {
+      return obstacle1.getPosition().y - obstacle2.getPosition().y;
+    });
+  }
+
+  /**
+   * Place a new obstacle while the game is running. If the game window has moved, we want to figure out which direction(s)
+   * it has moved in and try to place a new obstacle offscreen (so player doesn't see it pop in) in that direction(s).
+   */
+  placeNewObstacle(
+    gameWindow: Rect,
+    previousGameWindow: Rect,
+    gameLevel: number
+  ) {
+    const newObstacleChance = Math.ceil(NEW_OBSTACLE_CHANCE / gameLevel);
+    const shouldPlaceObstacle = randomInt(1, newObstacleChance);
+    console.log(newObstacleChance, shouldPlaceObstacle);
+    if (shouldPlaceObstacle !== newObstacleChance) {
+      return;
     }
 
-    /**
-     * Loop through and draw all obstacles
-     */
-    drawObstacles() {
-        this.obstacles.forEach((obstacle: Obstacle) => {
-            obstacle.draw();
-        });
+    if (gameWindow.left < previousGameWindow.left) {
+      this.placeObstacleLeft(gameWindow);
+    } else if (gameWindow.left > previousGameWindow.left) {
+      this.placeObstacleRight(gameWindow);
     }
 
-    /**
-     * Place initial obstacles. Mimics the original SkiFree game in that obstacles are only initially placed below the
-     * skier.
-     */
-    placeInitialObstacles() {
-        const numberObstacles = Math.ceil(
-            (GAME_WIDTH / STARTING_OBSTACLE_REDUCER) * (GAME_HEIGHT / STARTING_OBSTACLE_REDUCER)
-        );
-
-        const placementArea = new Rect(
-            -GAME_WIDTH / 2,
-            STARTING_OBSTACLE_GAP,
-            GAME_WIDTH / 2,
-            GAME_HEIGHT / 2
-        );
-
-        for (let i = 0; i < numberObstacles; i++) {
-            this.placeRandomObstacle(placementArea);
-        }
-
-        this.obstacles.sort((obstacle1: Obstacle, obstacle2: Obstacle) => {
-            return obstacle1.getPosition().y - obstacle2.getPosition().y;
-        });
+    if (gameWindow.top < previousGameWindow.top) {
+      this.placeObstacleTop(gameWindow);
+    } else if (gameWindow.top > previousGameWindow.top) {
+      this.placeObstacleBottom(gameWindow);
     }
+  }
 
-    /**
-     * Place a new obstacle while the game is running. If the game window has moved, we want to figure out which direction(s)
-     * it has moved in and try to place a new obstacle offscreen (so player doesn't see it pop in) in that direction(s).
-     */
-    placeNewObstacle(gameWindow: Rect, previousGameWindow: Rect, gameLevel: number) {
-        const newObstacleChance = Math.ceil(NEW_OBSTACLE_CHANCE/gameLevel)
-        const shouldPlaceObstacle = randomInt(1, newObstacleChance);
-        console.log(newObstacleChance,shouldPlaceObstacle )
-        if (shouldPlaceObstacle !== newObstacleChance) {
-            return;
-        }
+  /**
+   * Place an obstacle to the left of the game window
+   */
+  placeObstacleLeft(gameWindow: Rect) {
+    const placementArea = new Rect(
+      gameWindow.left,
+      gameWindow.top,
+      gameWindow.left,
+      gameWindow.bottom
+    );
+    this.placeRandomObstacle(placementArea);
+  }
 
-        if (gameWindow.left < previousGameWindow.left) {
-            this.placeObstacleLeft(gameWindow);
-        } else if (gameWindow.left > previousGameWindow.left) {
-            this.placeObstacleRight(gameWindow);
-        }
+  /**
+   * Place an obstacle to the right of the game window
+   */
+  placeObstacleRight(gameWindow: Rect) {
+    const placementArea = new Rect(
+      gameWindow.right,
+      gameWindow.top,
+      gameWindow.right,
+      gameWindow.bottom
+    );
+    this.placeRandomObstacle(placementArea);
+  }
 
-        if (gameWindow.top < previousGameWindow.top) {
-            this.placeObstacleTop(gameWindow);
-        } else if (gameWindow.top > previousGameWindow.top) {
-            this.placeObstacleBottom(gameWindow);
-        }
+  /**
+   * Place an obstacle above the game window
+   */
+  placeObstacleTop(gameWindow: Rect) {
+    const placementArea = new Rect(
+      gameWindow.left,
+      gameWindow.top,
+      gameWindow.right,
+      gameWindow.top
+    );
+    this.placeRandomObstacle(placementArea);
+  }
+
+  /**
+   * Place an obstacle below the game window
+   */
+  placeObstacleBottom(gameWindow: Rect) {
+    const placementArea = new Rect(
+      gameWindow.left,
+      gameWindow.bottom,
+      gameWindow.right,
+      gameWindow.bottom
+    );
+    this.placeRandomObstacle(placementArea);
+  }
+
+  /**
+   * Place a random obstacle somewhere within the placement area. Obstacles are distanced from each other rather than
+   * right on top of one another, so an open space must be calculated.
+   */
+  placeRandomObstacle(placementArea: Rect) {
+    let position: Position | null;
+    do {
+      position = this.calculateOpenPosition(placementArea);
+    } while (!position);
+
+    const newObstacle = new Obstacle(
+      position.x,
+      position.y,
+      this.imageManager,
+      this.canvas
+    );
+
+    this.obstacles.push(newObstacle);
+  }
+
+  /**
+   * Find a position within the passed in area to place an obstacle, ensuring that the obstacle is
+   * DISTANCE_BETWEEN_OBSTACLES distance away from any other obstacle. If the calculated position doesn't meet that
+   * criteria, return null.
+   */
+  calculateOpenPosition(placementArea: Rect): Position | null {
+    const placementX = randomInt(placementArea.left, placementArea.right);
+    const placementY = randomInt(placementArea.top, placementArea.bottom);
+
+    const foundCollision = this.obstacles.find((obstacle: Obstacle) => {
+      const obstacleX = obstacle.getPosition().x;
+      const obstacleY = obstacle.getPosition().y;
+
+      return (
+        placementX > obstacleX - DISTANCE_BETWEEN_OBSTACLES &&
+        placementX < obstacleX + DISTANCE_BETWEEN_OBSTACLES &&
+        placementY > obstacleY - DISTANCE_BETWEEN_OBSTACLES &&
+        placementY < obstacleY + DISTANCE_BETWEEN_OBSTACLES
+      );
+    });
+
+    if (foundCollision) {
+      return null;
+    } else {
+      return new Position(placementX, placementY);
     }
-
-    /**
-     * Place an obstacle to the left of the game window
-     */
-    placeObstacleLeft(gameWindow: Rect) {
-        const placementArea = new Rect(
-            gameWindow.left,
-            gameWindow.top,
-            gameWindow.left,
-            gameWindow.bottom
-        );
-        this.placeRandomObstacle(placementArea);
-    }
-
-    /**
-     * Place an obstacle to the right of the game window
-     */
-    placeObstacleRight(gameWindow: Rect) {
-        const placementArea = new Rect(
-            gameWindow.right,
-            gameWindow.top,
-            gameWindow.right,
-            gameWindow.bottom
-        );
-        this.placeRandomObstacle(placementArea);
-    }
-
-    /**
-     * Place an obstacle above the game window
-     */
-    placeObstacleTop(gameWindow: Rect) {
-        const placementArea = new Rect(
-            gameWindow.left,
-            gameWindow.top,
-            gameWindow.right,
-            gameWindow.top
-        );
-        this.placeRandomObstacle(placementArea);
-    }
-
-    /**
-     * Place an obstacle below the game window
-     */
-    placeObstacleBottom(gameWindow: Rect) {
-        const placementArea = new Rect(
-            gameWindow.left,
-            gameWindow.bottom,
-            gameWindow.right,
-            gameWindow.bottom
-        );
-        this.placeRandomObstacle(placementArea);
-    }
-
-    /**
-     * Place a random obstacle somewhere within the placement area. Obstacles are distanced from each other rather than
-     * right on top of one another, so an open space must be calculated.
-     */
-    placeRandomObstacle(placementArea: Rect) {
-        let position: Position | null;
-        do {
-            position = this.calculateOpenPosition(placementArea);
-        } while (!position);
-
-        const newObstacle = new Obstacle(
-            this.obstacles.length,
-            position.x,
-            position.y,
-            this.imageManager,
-            this.canvas
-        );
-
-        this.obstacles.push(newObstacle);
-    }
-
-    /**
-     * Find a position within the passed in area to place an obstacle, ensuring that the obstacle is
-     * DISTANCE_BETWEEN_OBSTACLES distance away from any other obstacle. If the calculated position doesn't meet that
-     * criteria, return null.
-     */
-    calculateOpenPosition(placementArea: Rect): Position | null {
-        const placementX = randomInt(placementArea.left, placementArea.right);
-        const placementY = randomInt(placementArea.top, placementArea.bottom);
-
-        const foundCollision = this.obstacles.find((obstacle: Obstacle) => {
-            const obstacleX = obstacle.getPosition().x;
-            const obstacleY = obstacle.getPosition().y;
-
-            return (
-                placementX > obstacleX - DISTANCE_BETWEEN_OBSTACLES &&
-                placementX < obstacleX + DISTANCE_BETWEEN_OBSTACLES &&
-                placementY > obstacleY - DISTANCE_BETWEEN_OBSTACLES &&
-                placementY < obstacleY + DISTANCE_BETWEEN_OBSTACLES
-            );
-        });
-
-        if (foundCollision) {
-            return null;
-        } else {
-            return new Position(placementX, placementY);
-        }
-    }
+  }
 }

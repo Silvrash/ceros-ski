@@ -1,43 +1,43 @@
 html,
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .gameBoard {
-    width: 20%;
-    border-left: 1px #000 solid;
-    padding: 10px;
+  width: 20%;
+  border-left: 1px #000 solid;
+  padding: 10px;
 }
 
 .gameStatus__status__item {
-    font-size: 1rem;
-    font-weight: bold;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .gameControls__item,
 .gameStatus__status__item {
-    margin-bottom: 2rem;
-    margin: 1rem 0;
+  margin-bottom: 2rem;
+  margin: 1rem 0;
 }
 
 .gameStatus__header,
 .gameControls__header {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
 }
 
 .gameControls__item__label {
-    font-size: 1rem;
-    font-weight: bold;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .gameControls__item__description {
-    font-size: 0.875rem;
+  font-size: 0.875rem;
 }

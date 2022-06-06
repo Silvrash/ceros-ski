@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title><%= htmlWebpackPlugin.options.title %></title>
-    </head>
-    <body>
-        <canvas id="skiCanvas"></canvas>
-        <div class="gameBoard">
-            <div class="gameStatus">
-                <span class="gameStatus__header">Game Status</span>
+  <head>
+    <meta charset="utf-8" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <canvas id="skiCanvas"></canvas>
+    <div class="gameBoard">
+      <div class="gameStatus">
+        <span class="gameStatus__header">Game Status</span>
 
-                <div class="gameStatus__status__item">
-                    <span class="gameStatus__status__label">Game State:</span>
-                    <span id="game_state" class="gameStatus__status__value">-</span>
-                </div>
-
-                <div class="gameStatus__status__item">
-                    <span class="gameStatus__status__label">Score:</span>
-                    <span id="game_score" class="gameStatus__status__value">-</span>
-                </div>
-
-                <div class="gameStatus__status__item">
-                    <span class="gameStatus__status__label">Level:</span>
-                    <span id="game_level" class="gameStatus__status__value">-</span>
-                </div>
-            </div>
-
-            <div class="gameControls">
-                <span class="gameControls__header">Controls</span>
-
-                <div class="gameControls__item">
-                    <span class="gameControls__item__label">Arrow left : </span>
-                    <span class="gameControls__item__description">Move Left</span>
-                </div>
-
-                <div class="gameControls__item">
-                    <span class="gameControls__item__label">Arrow Right : </span>
-                    <span class="gameControls__item__description">Move Right</span>
-                </div>
-
-                <div class="gameControls__item">
-                    <span class="gameControls__item__label">Arrow Down : </span>
-                    <span class="gameControls__item__description">Move Down</span>
-                </div>
-
-                <div class="gameControls__item">
-                    <span class="gameControls__item__label">Space bar : </span>
-                    <span class="gameControls__item__description">
-                        Jump (You can only jump over rocks not trees)
-                    </span>
-                </div>
-
-                <div class="gameControls__item">
-                    <span class="gameControls__item__label">P : </span>
-                    <span class="gameControls__item__description">Pause/Resume</span>
-                </div>
-
-                <div class="gameControls__item">
-                    <span class="gameControls__item__label">R : </span>
-                    <span class="gameControls__item__description">Restart</span>
-                </div>
-            </div>
+        <div class="gameStatus__status__item">
+          <span class="gameStatus__status__label">Game State:</span>
+          <span id="game_state" class="gameStatus__status__value">-</span>
         </div>
-    </body>
+
+        <div class="gameStatus__status__item">
+          <span class="gameStatus__status__label">Score:</span>
+          <span id="game_score" class="gameStatus__status__value">-</span>
+        </div>
+
+        <div class="gameStatus__status__item">
+          <span class="gameStatus__status__label">Level:</span>
+          <span id="game_level" class="gameStatus__status__value">-</span>
+        </div>
+      </div>
+
+      <div class="gameControls">
+        <span class="gameControls__header">Controls</span>
+
+        <div class="gameControls__item">
+          <span class="gameControls__item__label">Arrow left : </span>
+          <span class="gameControls__item__description">Move Left</span>
+        </div>
+
+        <div class="gameControls__item">
+          <span class="gameControls__item__label">Arrow Right : </span>
+          <span class="gameControls__item__description">Move Right</span>
+        </div>
+
+        <div class="gameControls__item">
+          <span class="gameControls__item__label">Arrow Down : </span>
+          <span class="gameControls__item__description">Move Down</span>
+        </div>
+
+        <div class="gameControls__item">
+          <span class="gameControls__item__label">Space bar : </span>
+          <span class="gameControls__item__description">
+            Jump (You can only jump over rocks not trees)
+          </span>
+        </div>
+
+        <div class="gameControls__item">
+          <span class="gameControls__item__label">P : </span>
+          <span class="gameControls__item__description">Pause/Resume</span>
+        </div>
+
+        <div class="gameControls__item">
+          <span class="gameControls__item__label">R : </span>
+          <span class="gameControls__item__description">Restart</span>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

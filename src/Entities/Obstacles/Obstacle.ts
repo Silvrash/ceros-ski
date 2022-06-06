@@ -12,37 +12,36 @@ import { Entity } from "../Entity";
  * The different types of obstacles that can be placed in the game.
  */
 const OBSTACLE_TYPES: IMAGE_NAMES[] = [
-    IMAGE_NAMES.TREE,
-    IMAGE_NAMES.TREE_CLUSTER,
-    IMAGE_NAMES.ROCK1,
-    IMAGE_NAMES.ROCK2,
-    IMAGE_NAMES.JUMP_RAMP,
+  IMAGE_NAMES.TREE,
+  IMAGE_NAMES.TREE_CLUSTER,
+  IMAGE_NAMES.ROCK1,
+  IMAGE_NAMES.ROCK2,
+  IMAGE_NAMES.JUMP_RAMP,
 ];
 
 export class Obstacle extends Entity {
-    /**
-     * The name of the current image being displayed for the obstacle.
-     */
-    imageName: IMAGE_NAMES;
+  /**
+   * The name of the current image being displayed for the obstacle.
+   */
+  imageName: IMAGE_NAMES;
 
-    /**
-     * obstacle id
-     */
-    id: number;
+  /**
+   * Initialize an obstacle and make it a random type.
+   */
+  constructor(
+    x: number,
+    y: number,
+    imageManager: ImageManager,
+    canvas: Canvas
+  ) {
+    super(x, y, imageManager, canvas);
 
-    /**
-     * Initialize an obstacle and make it a random type.
-     */
-    constructor(id: number, x: number, y: number, imageManager: ImageManager, canvas: Canvas) {
-        super(x, y, imageManager, canvas);
+    const typeIdx = randomInt(0, OBSTACLE_TYPES.length - 1);
+    this.imageName = OBSTACLE_TYPES[typeIdx];
+  }
 
-        const typeIdx = randomInt(0, OBSTACLE_TYPES.length - 1);
-        this.imageName = OBSTACLE_TYPES[typeIdx];
-        this.id = id;
-    }
-
-    /**
-     * Obstacles can't be destroyed
-     */
-    die() {}
+  /**
+   * Obstacles can't be destroyed
+   */
+  die() {}
 }

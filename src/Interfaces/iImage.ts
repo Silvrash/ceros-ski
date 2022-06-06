@@ -5,6 +5,6 @@
 import { IMAGE_NAMES } from "../Constants";
 
 export interface iImage {
-    name: IMAGE_NAMES;
-    url: string;
+  name: IMAGE_NAMES;
+  url: string;
 }
