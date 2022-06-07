@@ -104,7 +104,7 @@ export class ObstacleManager {
   ) {
     const newObstacleChance = Math.ceil(NEW_OBSTACLE_CHANCE / gameLevel);
     const shouldPlaceObstacle = randomInt(1, newObstacleChance);
-    console.log(newObstacleChance, shouldPlaceObstacle);
+
     if (shouldPlaceObstacle !== newObstacleChance) {
       return;
     }
